@@ -1,5 +1,10 @@
-import Image from 'next/image'
+'use client'
+
+import Vacations from './Components/Vacations'
+import { useGlobalState } from './context/globalProvider'
 
 export default function Home() {
-  return <main></main>
+  const { vacations } = useGlobalState()
+
+  return <Vacations title="All Vacations" vactions={vacations} />
 }
