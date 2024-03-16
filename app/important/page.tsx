@@ -5,5 +5,7 @@ import Vacations from '../Components/Vacations'
 
 export default function Important() {
   const { importantVacations } = useGlobalState()
-  return <Vacations title="Important Vacations" vactions={importantVacations} />
+  return (
+    <Vacations title="Important Vacations" vacations={importantVacations} />
+  )
 }

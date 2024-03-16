@@ -12,6 +12,13 @@ export const VacationItemStyled = styled.div`
   flex-direction: column;
   gap: 0.5rem;
 
+  .date-content {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+  }
+
   .date {
     margin-top: auto;
   }

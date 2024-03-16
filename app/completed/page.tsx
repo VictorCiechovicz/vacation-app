@@ -6,5 +6,7 @@ import Vacations from '../Components/Vacations'
 export default function Completed() {
   const { completedVacations } = useGlobalState()
 
-  return <Vacations title="Completed Vacations" vactions={completedVacations} />
+  return (
+    <Vacations title="Completed Vacations" vacations={completedVacations} />
+  )
 }

@@ -11,33 +11,36 @@ import VacationItem from '../VacationItem'
 
 interface Props {
   title: string
-  vactions: any[]
+  vacations: any[]
 }
 
-export default function Vacations({ title, vactions }: Props) {
-  const { theme, isLoading, openModal, modal } = useGlobalState()
+export default function Vacations({ title, vacations }: Props) {
+  const { theme, isLoading, openModal, modal, setCurrentVacation } =
+    useGlobalState()
+
+  function handleNewVacation() {
+    setCurrentVacation(null)
+    openModal()
+  }
 
   return (
     <VacationsStyled theme={theme}>
       {modal && <Modal content={<CreateContent />} />}
       <h1>{title}</h1>
 
-      <button className="btn-rounded" onClick={openModal}>
-        {plus}
-      </button>
-
       <div className="vacations grid">
-        {vactions.map(vaction => (
+        {vacations.map(vacation => (
           <VacationItem
-            key={vaction.id}
-            title={vaction.title}
-            description={vaction.description}
-            date={vaction.date}
-            isCompleted={vaction.isCompleted}
-            id={vaction.id}
+            key={vacation.id}
+            title={vacation.title}
+            description={vacation.description}
+            initialDate={vacation.initialDate}
+            finalDate={vacation.finalDate}
+            isCompleted={vacation.isCompleted}
+            id={vacation.id}
           />
         ))}
-        <button className="create-vaction" onClick={openModal}>
+        <button className="create-vacation" onClick={handleNewVacation}>
           {add}
           Add New Vaction
         </button>

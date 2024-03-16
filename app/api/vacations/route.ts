@@ -10,9 +10,10 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Unauthorized', status: 401 })
     }
 
-    const { title, description, date, completed, important } = await req.json()
+    const { title, description, initialDate, finalDate, completed, important } =
+      await req.json()
 
-    if (!title || !description || !date) {
+    if (!title || !description || !initialDate || !finalDate) {
       return NextResponse.json({
         error: 'Missing required fields',
         status: 400
@@ -30,7 +31,8 @@ export async function POST(req: Request) {
       data: {
         title,
         description,
-        date,
+        initialDate,
+        finalDate,
         isCompleted: completed,
         isImportant: important,
         userId

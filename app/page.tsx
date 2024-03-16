@@ -5,6 +5,6 @@ import { useGlobalState } from './context/globalProvider'
 
 export default function Home() {
   const { vacations } = useGlobalState()
-
-  return <Vacations title="All Vacations" vactions={vacations} />
+  console.log(vacations)
+  return <Vacations title="All Vacations" vacations={vacations} />
 }

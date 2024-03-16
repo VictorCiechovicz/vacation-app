@@ -1,5 +1,5 @@
 'use client'
-import React, { createContext, useState, useContext } from 'react'
+import React, { createContext, useState, useContext, useEffect } from 'react'
 import themes from './themes'
 import axios from 'axios'
 import toast from 'react-hot-toast'
@@ -15,8 +15,8 @@ export const GlobalProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false)
   const [modal, setModal] = useState(false)
   const [collapsed, setCollapsed] = useState(false)
-
   const [vacations, setVacations] = useState([])
+  const [currentVacation, setCurrentVacation] = useState(null)
 
   const theme = themes[selectedTheme]
 
@@ -35,7 +35,7 @@ export const GlobalProvider = ({ children }) => {
   const allVacations = async () => {
     setIsLoading(true)
     try {
-      await axios.get('/api/vacations')
+      const res = await axios.get('/api/vacations')
 
       const sorted = res.data.sort((a, b) => {
         return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
@@ -74,17 +74,29 @@ export const GlobalProvider = ({ children }) => {
     }
   }
 
+  const editVacation = vacation => {
+    setCurrentVacation(vacation)
+    openModal()
+  }
+
+  const getVacation = async id => {
+    try {
+      const res = await axios.get(`/api/vacations/${id}`)
+      return res.data
+    } catch (error) {
+      console.log(error)
+      toast.error('Something went wrong')
+    }
+  }
+
   const completedVacations = vacations.filter(
     vacation => vacation.isCompleted === true
   )
   const importantVacations = vacations.filter(
     vacation => vacation.isImportant === true
   )
-  const incompleteVacations = vacations.filter(
-    vacation => vacation.isCompleted === false
-  )
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (user) allVacations()
   }, [user])
 
@@ -94,10 +106,14 @@ export const GlobalProvider = ({ children }) => {
         theme,
         vacations,
         deleteVacation,
+        getVacation,
+        currentVacation,
+        setCurrentVacation,
+        editVacation,
         isLoading,
         completedVacations,
         importantVacations,
-        incompleteVacations,
+
         updateVacation,
         modal,
         openModal,

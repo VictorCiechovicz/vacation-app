@@ -9,7 +9,8 @@ import { VacationItemStyled } from './styles'
 interface Props {
   title: string
   description: string
-  date: string
+  initialDate: string
+  finalDate: string
   isCompleted: boolean
   id: string
 }
@@ -17,27 +18,39 @@ interface Props {
 export default function VacationItem({
   title,
   description,
-  date,
+  finalDate,
+  initialDate,
   isCompleted,
   id
 }: Props) {
-  const { theme, deleteTask, updateTask } = useGlobalState()
+  const { theme, deleteVacation, updateVacation, getVacation, editVacation } =
+    useGlobalState()
+
+  function truncateText(text: string, limit: number) {
+    return text.length > limit ? text.substring(0, limit) + '...' : text
+  }
+
   return (
     <VacationItemStyled theme={theme}>
       <h1>{title}</h1>
-      <p>{description}</p>
-      <p className="date">{formatDate(date)}</p>
+      <p>{truncateText(description, 30)}</p>
+      <p>Vacation Period</p>
+      <div className="date-content">
+        <p className="date">{formatDate(initialDate)}</p>-
+        <p className="date">{formatDate(finalDate)}</p>
+      </div>
+
       <div className="task-footer">
         {isCompleted ? (
           <button
             className="completed"
             onClick={() => {
-              const task = {
+              const vacation = {
                 id,
                 isCompleted: !isCompleted
               }
 
-              updateTask(task)
+              updateVacation(vacation)
             }}
           >
             Completed
@@ -46,22 +59,30 @@ export default function VacationItem({
           <button
             className="incomplete"
             onClick={() => {
-              const task = {
+              const vacation = {
                 id,
                 isCompleted: !isCompleted
               }
 
-              updateTask(task)
+              updateVacation(vacation)
             }}
           >
             Incomplete
           </button>
         )}
-        <button className="edit">{edit}</button>
+        <button
+          className="edit"
+          onClick={async () => {
+            const vacationData = await getVacation(id)
+            editVacation(vacationData)
+          }}
+        >
+          {edit}
+        </button>
         <button
           className="delete"
           onClick={() => {
-            deleteTask(id)
+            deleteVacation(id)
           }}
         >
           {trash}

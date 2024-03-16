@@ -1,37 +1,46 @@
 'use client'
 import { useGlobalState } from '@/app/context/globalProvider'
 import axios from 'axios'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import Button from '../Button'
-import { add, plus } from '@/app/utils/Icons'
+import { add, edit } from '@/app/utils/Icons'
 import { CreateContentStyled } from './styles'
 
 export default function CreateContent() {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
-  const [date, setDate] = useState('')
+  const [initialDate, setInitialDate] = useState('')
+  const [finalDate, setFinalDate] = useState('')
   const [completed, setCompleted] = useState(false)
   const [important, setImportant] = useState(false)
 
-  const { theme, allTasks, closeModal } = useGlobalState()
+  const { theme, allVacations, closeModal, currentVacation } = useGlobalState()
 
-  const handleChange = (name: string) => (e: any) => {
+  const handleChange = (name: any) => (e: any) => {
+    const value =
+      name === 'completed' || name === 'important'
+        ? e.target.checked
+        : e.target.value
+
     switch (name) {
       case 'title':
-        setTitle(e.target.value)
+        setTitle(value)
         break
       case 'description':
-        setDescription(e.target.value)
+        setDescription(value)
         break
-      case 'date':
-        setDate(e.target.value)
+      case 'initialDate':
+        setInitialDate(value)
+        break
+      case 'finalDate':
+        setFinalDate(value)
         break
       case 'completed':
-        setCompleted(e.target.checked)
+        setCompleted(value)
         break
       case 'important':
-        setImportant(e.target.checked)
+        setImportant(value)
         break
       default:
         break
@@ -44,32 +53,43 @@ export default function CreateContent() {
     const vacation = {
       title,
       description,
-      date,
+      initialDate,
+      finalDate,
       completed,
       important
     }
 
     try {
-      const res = await axios.post('/api/vacations', vacation)
-
-      if (res.data.error) {
-        toast.error(res.data.error)
-      }
-
-      if (!res.data.error) {
+      if (currentVacation) {
+        await axios.put(`/api/vacations/${currentVacation.id}`, vacation)
+        toast.success('Vacation updated successfully.')
+      } else {
+        await axios.post('/api/vacations', vacation)
         toast.success('Vacation created successfully.')
-        allTasks()
-        closeModal()
       }
+      closeModal()
+      allVacations()
     } catch (error) {
       toast.error('Something went wrong.')
-      console.log(error)
+      console.error(error)
     }
   }
 
+  useEffect(() => {
+    if (currentVacation) {
+      setTitle(currentVacation.title)
+      setDescription(currentVacation.description)
+      setInitialDate(currentVacation.initialDate)
+      setFinalDate(currentVacation.finalDate)
+      setCompleted(currentVacation.isCompleted)
+      setImportant(currentVacation.isImportant)
+    }
+  }, [currentVacation])
+
   return (
     <CreateContentStyled onSubmit={handleSubmit} theme={theme}>
-      <h1>Create a Task</h1>
+      {currentVacation ? <h1>Edit a Vacation</h1> : <h1>Create a Vacation</h1>}
+
       <div className="input-control">
         <label htmlFor="title">Title</label>
         <input
@@ -78,7 +98,7 @@ export default function CreateContent() {
           value={title}
           name="title"
           onChange={handleChange('title')}
-          placeholder="e.g, Watch a video from Fireship."
+          placeholder="Title"
         />
       </div>
       <div className="input-control">
@@ -89,23 +109,35 @@ export default function CreateContent() {
           name="description"
           id="description"
           rows={4}
-          placeholder="e.g, Watch a video about Next.js Auth"
-        ></textarea>
+          maxLength={500}
+          placeholder="Description"
+        />
+        <p>{description.length}/500</p>
       </div>
       <div className="input-control">
-        <label htmlFor="date">Date</label>
+        <label htmlFor="date">Initial Date</label>
         <input
-          value={date}
-          onChange={handleChange('date')}
+          value={initialDate}
+          onChange={handleChange('initialDate')}
           type="date"
-          name="date"
-          id="date"
+          name="initialDate"
+          id="initialDate"
+        />
+      </div>
+      <div className="input-control">
+        <label htmlFor="date">Final Date</label>
+        <input
+          value={finalDate}
+          onChange={handleChange('finalDate')}
+          type="date"
+          name="finalDate"
+          id="finalDate"
         />
       </div>
       <div className="input-control toggler">
-        <label htmlFor="completed">Toggle Completed</label>
+        <label htmlFor="completed">Completed</label>
         <input
-          value={completed.toString()}
+          checked={completed}
           onChange={handleChange('completed')}
           type="checkbox"
           name="completed"
@@ -113,9 +145,9 @@ export default function CreateContent() {
         />
       </div>
       <div className="input-control toggler">
-        <label htmlFor="important">Toggle Important</label>
+        <label htmlFor="important">Important</label>
         <input
-          value={important.toString()}
+          checked={important}
           onChange={handleChange('important')}
           type="checkbox"
           name="important"
@@ -126,8 +158,8 @@ export default function CreateContent() {
       <div className="submit-btn flex justify-end">
         <Button
           type="submit"
-          name="Create Task"
-          icon={add}
+          name={currentVacation ? 'Edit' : 'Create'}
+          icon={currentVacation ? edit : add}
           padding={'0.8rem 2rem'}
           borderRad={'0.8rem'}
           fw={'500'}
