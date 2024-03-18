@@ -10,8 +10,8 @@ export const CreateContentStyled = styled.form`
 
   .input-control {
     position: relative;
-    margin: 1.6rem 0;
-    font-weight: 500;
+    margin: 0.5rem 0;
+    font-weight: 200;
 
     @media screen and (max-width: 450px) {
       margin: 1rem 0;
@@ -20,7 +20,7 @@ export const CreateContentStyled = styled.form`
     label {
       margin-bottom: 0.5rem;
       display: inline-block;
-      font-size: clamp(0.9rem, 5vw, 1.2rem);
+      font-size: clamp(0.9rem, 5vw, 1rem);
 
       span {
         color: ${props => props.theme.colorGrey3};

@@ -9,6 +9,8 @@ import { CreateContentStyled } from './styles'
 
 export default function CreateContent() {
   const [title, setTitle] = useState('')
+  const [participants, setParticipants] = useState('')
+  const [location, setLocation] = useState('')
   const [description, setDescription] = useState('')
   const [initialDate, setInitialDate] = useState('')
   const [finalDate, setFinalDate] = useState('')
@@ -29,6 +31,12 @@ export default function CreateContent() {
         break
       case 'description':
         setDescription(value)
+        break
+      case 'participants':
+        setParticipants(value)
+        break
+      case 'location':
+        setLocation(value)
         break
       case 'initialDate':
         setInitialDate(value)
@@ -52,6 +60,8 @@ export default function CreateContent() {
 
     const vacation = {
       title,
+      participants,
+      location,
       description,
       initialDate,
       finalDate,
@@ -79,6 +89,8 @@ export default function CreateContent() {
     if (currentVacation) {
       setTitle(currentVacation.title)
       setDescription(currentVacation.description)
+      setLocation(currentVacation.location)
+      setParticipants(currentVacation.participants)
       setInitialDate(currentVacation.initialDate)
       setFinalDate(currentVacation.finalDate)
       setCompleted(currentVacation.isCompleted)
@@ -99,6 +111,31 @@ export default function CreateContent() {
           name="title"
           onChange={handleChange('title')}
           placeholder="Title"
+          minLength={3}
+          required
+        />
+      </div>
+      <div className="input-control">
+        <label htmlFor="location">Location</label>
+        <input
+          type="text"
+          id="location"
+          value={location}
+          name="location"
+          onChange={handleChange('location')}
+          placeholder="Location"
+          required
+        />
+      </div>
+      <div className="input-control">
+        <label htmlFor="participants">Participants</label>
+        <input
+          type="text"
+          id="participants"
+          value={participants}
+          name="participants"
+          onChange={handleChange('participants')}
+          placeholder="Participants"
         />
       </div>
       <div className="input-control">
@@ -111,6 +148,7 @@ export default function CreateContent() {
           rows={4}
           maxLength={500}
           placeholder="Description"
+          required
         />
         <p>{description.length}/500</p>
       </div>
@@ -122,6 +160,7 @@ export default function CreateContent() {
           type="date"
           name="initialDate"
           id="initialDate"
+          required
         />
       </div>
       <div className="input-control">
@@ -132,6 +171,7 @@ export default function CreateContent() {
           type="date"
           name="finalDate"
           id="finalDate"
+          required
         />
       </div>
       <div className="input-control toggler">
@@ -160,7 +200,7 @@ export default function CreateContent() {
           type="submit"
           name={currentVacation ? 'Edit' : 'Create'}
           icon={currentVacation ? edit : add}
-          padding={'0.8rem 2rem'}
+          padding={'0.5rem 1rem'}
           borderRad={'0.8rem'}
           fw={'500'}
           fs={'1.2rem'}

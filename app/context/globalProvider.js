@@ -113,7 +113,6 @@ export const GlobalProvider = ({ children }) => {
         isLoading,
         completedVacations,
         importantVacations,
-
         updateVacation,
         modal,
         openModal,

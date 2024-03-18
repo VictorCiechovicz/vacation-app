@@ -15,8 +15,7 @@ interface Props {
 }
 
 export default function Vacations({ title, vacations }: Props) {
-  const { theme, isLoading, openModal, modal, setCurrentVacation } =
-    useGlobalState()
+  const { theme, openModal, modal, setCurrentVacation } = useGlobalState()
 
   function handleNewVacation() {
     setCurrentVacation(null)

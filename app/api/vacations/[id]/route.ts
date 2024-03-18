@@ -59,14 +59,22 @@ export async function PUT(
   try {
     const { userId } = auth()
     const { id } = params
-    const { title, description, initialDate, finalDate, completed, important } =
-      await req.json()
+    const {
+      title,
+      location,
+      participants,
+      description,
+      initialDate,
+      finalDate,
+      completed,
+      important
+    } = await req.json()
 
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized', status: 401 })
     }
 
-    if (!title || !description || !initialDate || !finalDate) {
+    if (!title || !location || !description || !initialDate || !finalDate) {
       return NextResponse.json({
         error: 'Missing required fields',
         status: 400
@@ -86,6 +94,8 @@ export async function PUT(
       },
       data: {
         title,
+        location,
+        participants,
         description,
         initialDate,
         finalDate,

@@ -10,10 +10,18 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Unauthorized', status: 401 })
     }
 
-    const { title, description, initialDate, finalDate, completed, important } =
-      await req.json()
+    const {
+      title,
+      location,
+      participants,
+      description,
+      initialDate,
+      finalDate,
+      completed,
+      important
+    } = await req.json()
 
-    if (!title || !description || !initialDate || !finalDate) {
+    if (!title || !location || !description || !initialDate || !finalDate) {
       return NextResponse.json({
         error: 'Missing required fields',
         status: 400
@@ -30,6 +38,8 @@ export async function POST(req: Request) {
     const vacation = await prisma.vacation.create({
       data: {
         title,
+        location,
+        participants,
         description,
         initialDate,
         finalDate,
