@@ -1,6 +1,6 @@
-# 💵 VacationApp
+# 👨‍👩‍👧‍👦 VacationApp
 
-This application is project to Vacation Management using Next.js 13, Styled Components, Prisma, MongoDb and Clerk to atentication. This application was created for the purpose of studies.
+This application is project to Vacation Management using Next.js 13, Styled Components, Prisma, MongoDb and Clerk to autentication. This application was created for the purpose of studies.
 
 ## ✨ Stack
 
